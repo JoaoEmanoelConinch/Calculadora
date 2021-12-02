@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import br.com.senior.calculadora.model.exception.PasswordException;
+import br.com.senior.calculadora.model.exception.PasswordNotFoundException;
 import br.com.senior.calculadora.model.profile.CalculadoraProfile;
 
 @Service
@@ -15,7 +17,16 @@ public class CalculadoraServiceTest implements CalculadoraService {
 
 	@Override
 	public Boolean isValid(String senha) {
-		return calculadoraProfile.getSenha().equals(senha);
+		if (senha == null) {
+			throw new PasswordNotFoundException();
+		}
+
+		boolean valido = calculadoraProfile.getSenha().equals(senha);
+		if (!valido) {
+			throw new PasswordException();
+		}
+
+		return valido;
 	}
 
 }
